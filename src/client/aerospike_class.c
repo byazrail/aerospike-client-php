@@ -174,7 +174,7 @@ bool register_aerospike_class(void)
 
 }
 
-static void aerospike_object_free_storage(zend_object *object TSRMLS_DC) {
+static void aerospike_object_free_storage(zend_object *object) {
 	AerospikeClient* client = get_aerospike_from_zobj(object);
 	as_error err;
 	/* It is only safe to destroy the client if it has been fully constructed
@@ -190,7 +190,7 @@ static void aerospike_object_free_storage(zend_object *object TSRMLS_DC) {
  	return;
 }
 
-static void aerospike_object_destructor(zend_object *object TSRMLS_DC) {
+static void aerospike_object_destructor(zend_object *object) {
 	as_error err;
 	as_error_init(&err);
 	AerospikeClient* client = get_aerospike_from_zobj(object);
@@ -246,8 +246,8 @@ PHP_METHOD(Aerospike, __construct)
 	zend_update_property_long(aerospike_ce, getThis(), "errorno", sizeof("errorno") - 1, AEROSPIKE_OK);
 	zend_update_property_string(aerospike_ce, getThis(), "error", sizeof("error") - 1, "");
 
-	zend_replace_error_handling(EH_THROW, NULL, &error_handling TSRMLS_CC); // fail to construct here must raise error
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "h|bh",
+	zend_replace_error_handling(EH_THROW, NULL, &error_handling); // fail to construct here must raise error
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "h|bh",
 		&z_config, &persistent, &z_options) != SUCCESS) {
 		zend_restore_error_handling(&error_handling);
 		RETURN_LONG(AEROSPIKE_ERR_PARAM);
@@ -519,7 +519,7 @@ PHP_METHOD(Aerospike, close) {
 	}
 	client->is_connected = false;
 
-	RETURN_LONG(err.code)
+	RETURN_LONG(err.code);
 }
 /* }}} */
 

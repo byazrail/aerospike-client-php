@@ -52,7 +52,7 @@ PHP_METHOD(Aerospike, get)
 	}
 	aerospike* as_ptr = client->as_client;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "hz/|z!z",
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "hz/|z!z",
 		&z_key_hash, &get_record, &z_filter, &z_read_policy) != SUCCESS) {
 			update_client_error(getThis(), AEROSPIKE_ERR_PARAM, "Invalid parameters to Aerospike::get", false);
 			RETURN_LONG(AEROSPIKE_ERR_PARAM);
