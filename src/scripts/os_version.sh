@@ -57,6 +57,9 @@ main() {
 		*'centos'* )
 			distro_id='centos'
 			;;
+        *'rocky'* )
+                distro_id='rocky'
+                ;;
 		*'redhat'* )
 			distro_id='redhat'
 			;;
@@ -76,13 +79,15 @@ main() {
 		esac
 
 		case "$distro_id" in
-		'centos' | 'redhat' | 'scientific' )
+		'centos' | 'redhat' | 'scientific' | 'rocky' )
 			local release=''
 			if [ -f /etc/centos-release ]; then
 				release=$(cat /etc/centos-release | tr '[:upper:]' '[:lower:]')
 			elif [ -f /etc/redhat-release ]; then
 				release=$(cat /etc/redhat-release | tr '[:upper:]' '[:lower:]')
-			fi
+            elif [ -f /etc/rocky-release ]; then
+                    release=$(cat /etc/redhat-release | tr '[:upper:]' '[:lower:]')
+            fi
 			release_version=${release##*release}
 			distro_version=${release_version%.*}
 			;;
@@ -104,7 +109,7 @@ main() {
 	distro_version=${distro_version//[[:space:]]/}
 
 	case "$distro_id" in
-	'centos' | 'redhat' | 'rhel' | 'scientific' )
+	'centos' | 'redhat' | 'rhel' | 'scientific' | 'rocky' )
 		distro_version=${distro_version%.*}
 		distro_long="${distro_id}${distro_version}"
 		distro_short="el${distro_version}"
