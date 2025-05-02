@@ -222,11 +222,15 @@ as_status as_bins_to_zval(const as_record* aerospike_record, zval* z_bins, as_er
 			/* In case of error this will have set the err code, so don't reset it here */
 			goto CLEANUP;
 		}
-		if (add_assoc_zval(z_bins, bin->name, &z_bin_value) != SUCCESS) {
-			zval_dtor(&z_bin_value);
-			as_error_update(err, AEROSPIKE_ERR_CLIENT, "Failed to add zval to hashtable");
-			goto CLEANUP;
-		}
+
+		//array_init(&z_bin_value);
+		add_assoc_zval(z_bins, bin->name, &z_bin_value);
+
+		//if (add_assoc_zval(z_bins, bin->name, &z_bin_value) != SUCCESS) {
+		//	zval_dtor(&z_bin_value);
+		//	as_error_update(err, AEROSPIKE_ERR_CLIENT, "Failed to add zval to hashtable");
+		//	goto CLEANUP;
+		//}
 	}
 
 CLEANUP:
@@ -1077,10 +1081,13 @@ as_status as_roles_to_zval(as_role** roles, int roles_size, zval* z_roles, as_er
 		if (as_role_to_zval(roles[i], &current_role, err) != AEROSPIKE_OK) {
 			goto CLEANUP;
 		}
-		if (add_assoc_zval(z_roles, roles[i]->name, &current_role) == FAILURE) {
-			zval_dtor(&current_role);
-			as_error_update(err, AEROSPIKE_ERR_CLIENT, "Unable to add role to roles list");
-		}
+		//if (add_assoc_zval(z_roles, roles[i]->name, &current_role) == FAILURE) {
+		//	zval_dtor(&current_role);
+		//	as_error_update(err, AEROSPIKE_ERR_CLIENT, "Unable to add role to roles list");
+		//}
+
+		//array_init(&current_role);
+		add_assoc_zval(z_roles, roles[i]->name, &current_role);
 	}
 
 CLEANUP:
@@ -1138,18 +1145,23 @@ as_status as_privilege_to_zval(as_privilege* privilege, zval* z_privilege, as_er
 	}
 
 	array_init(z_privilege);
-	if (add_assoc_string(z_privilege, "ns", privilege->ns) == FAILURE) {
-		as_error_update(err, AEROSPIKE_ERR_CLIENT, "Failed to construct privilege");
-		goto CLEANUP;
-	}
-	if (add_assoc_string(z_privilege, "set", privilege->set) == FAILURE) {
-		as_error_update(err, AEROSPIKE_ERR_CLIENT, "Failed to construct privilege");
-		goto CLEANUP;
-	}
-	if (add_assoc_long(z_privilege, "code", privilege->code) == FAILURE) {
-		as_error_update(err, AEROSPIKE_ERR_CLIENT, "Failed to construct privilege");
-		goto CLEANUP;
-	}
+
+	add_assoc_string(z_privilege, "ns", privilege->ns);
+	add_assoc_string(z_privilege, "set", privilege->set);
+	add_assoc_long(z_privilege, "code", privilege->code);
+	
+	//if (add_assoc_string(z_privilege, "ns", privilege->ns) == FAILURE) {
+	//	as_error_update(err, AEROSPIKE_ERR_CLIENT, "Failed to construct privilege");
+	//	goto CLEANUP;
+	//}
+	//if (add_assoc_string(z_privilege, "set", privilege->set) == FAILURE) {
+	//	as_error_update(err, AEROSPIKE_ERR_CLIENT, "Failed to construct privilege");
+	//	goto CLEANUP;
+	//}
+	//if (add_assoc_long(z_privilege, "code", privilege->code) == FAILURE) {
+	//	as_error_update(err, AEROSPIKE_ERR_CLIENT, "Failed to construct privilege");
+	//	goto CLEANUP;
+	//}
 
 CLEANUP:
 	if (err->code != AEROSPIKE_OK) {

@@ -53,7 +53,7 @@ PHP_METHOD(Aerospike, put)
 		RETURN_LONG(err.code);
 	}
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "hz|z!z",
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "hz|z!z",
 			&z_key_hash, &zval_to_store, &z_ttl, &z_write_policy) != SUCCESS) {
 
 		update_client_error(getThis(), AEROSPIKE_ERR_PARAM, "Invalid parameters to put", false);
