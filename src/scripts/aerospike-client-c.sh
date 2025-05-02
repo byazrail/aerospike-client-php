@@ -126,6 +126,10 @@ if [ $DOWNLOAD ] && [ $DOWNLOAD == 1 ]; then
           PKG_TYPE="rpm"
           ;;
         "debian"* )
+          # Debian 12'yi Debian 10 gibi göster
+          if [[ "$PKG_DIST" == "debian12" ]]; then
+            PKG_DIST="debian10"
+          fi
           PKG_SUFFIX="${PKG_DIST}.x86_64.deb"
           PKG_TYPE="deb"
           ;;
